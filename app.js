@@ -8,8 +8,7 @@ var usersRouter = require('./routes/users');
 var cookie_parser=require('cookie-parser')
 var bod_parser=require('body-parser')
 var app = express();
-
-
+var db=require('./MongodDB/DBSetup')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -21,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+db
 app.use('/', usersRouter);
 
 // catch 404 and forward to error handler
