@@ -10,7 +10,6 @@ const url = 'mongodb://localhost:27017'
 mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log(chalk.red("we are connected"))
 })
-
 const allSchemas = () => {
     const user = mongoose.Schema({
         email: { type: String, required: true, unique: true },

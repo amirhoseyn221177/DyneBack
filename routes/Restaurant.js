@@ -2,10 +2,11 @@ const express = require('express')
 const route = express.Router()
 const mongoose = require('mongoose')
 
-let Restuarant = mongoose.model("restaurant")
 
 route.post('/addrestuarant', async (req, res) => {
     try {
+        let Restuarant = mongoose.model("restaurant")
+
         let restaurant = new Restuarant(req.body)
         await restaurant.save(() => {
             console.log("it is saved")
@@ -26,9 +27,11 @@ route.post('/getall', async (req, res) => {
 })
 
 
-route.post(`/getrestuarant/${id}`, async (req, res) => {
+route.post(`/getrestuarant/:id`, async (req, res) => {
     try {
-        let restaurant = await Restuarant.findById(id).exec((err, res) => {
+        let Restuarant = mongoose.model("restaurant")
+
+        let restaurant = await Restuarant.findById(parseInt(req.params.id)).exec((err, res) => {
             if (err) console.log(`there is an error getting this restuarant ${err}`)
             else {
                 console.log("found the restuarant")
@@ -41,9 +44,11 @@ route.post(`/getrestuarant/${id}`, async (req, res) => {
 })
 
 
-route.post(`/deleterestuarant/${id}`,async(req,res)=>{
+route.post(`/deleterestuarant/:id`,async(req,res)=>{
     try{
-        await Restuarant.deleteOne({id:id},(err)=>{
+        let Restuarant = mongoose.model("restaurant")
+
+        await Restuarant.deleteOne({id:parseInt(req.params.id)},(err)=>{
             if (err)console.log(err)
             else{
                 console.log("this restuarant is deleted ")
