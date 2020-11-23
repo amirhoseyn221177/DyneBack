@@ -44,17 +44,17 @@ route.post(`/getrestuarant/:id`, async (req, res) => {
 })
 
 
-route.post(`/deleterestuarant/:id`,async(req,res)=>{
-    try{
+route.post(`/deleterestuarant/:id`, async (req, res) => {
+    try {
         let Restuarant = mongoose.model("restaurant")
 
-        await Restuarant.deleteOne({id:parseInt(req.params.id)},(err)=>{
-            if (err)console.log(err)
-            else{
+        await Restuarant.deleteOne({ id: parseInt(req.params.id) }, (err) => {
+            if (err) console.log(err)
+            else {
                 console.log("this restuarant is deleted ")
             }
         })
-    }catch(e){
+    } catch (e) {
         console.log(e)
     }
 })

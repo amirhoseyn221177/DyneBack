@@ -7,7 +7,7 @@ var chalk = require('chalk');
 const url = 'mongodb://localhost:27017'
 
 //export this function and imported by server.js
-mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true }, () => {
+mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true,autoIndex:false }, () => {
     console.log(chalk.red("we are connected"))
 })
 const allSchemas = () => {
@@ -20,8 +20,8 @@ const allSchemas = () => {
             Latitude: Number, Longtitude: Number
         },
         lastTime: Date,
-        friends: String,
-        phone: {type:String,required:true,unique:true},
+        friends: {type:[String],required:true},
+        phone: { type: String, required: true, unique: true },
         meetups: String,
         rating: Number,
         points: Number,
@@ -120,7 +120,7 @@ const allSchemas = () => {
         hasPickup: Boolean,
         hasEatIn: Boolean,
         hasPatio: Boolean,
-        hasDelivery: {type:Boolean,default:false},
+        hasDelivery: { type: Boolean, default: false },
         isFavorite: Boolean,
         localPopularity: Number,
         openNow: Boolean,
