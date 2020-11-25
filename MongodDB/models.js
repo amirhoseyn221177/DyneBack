@@ -6,9 +6,10 @@ let Cuisine = mongoose.model('Cuisine')
 let Message = mongoose.model('message')
 let MeetUp = mongoose.model('meetUp')
 
-module.exports = { 
-    User: User, 
+module.exports = {
+    User: User,
     Restuarant: Restuarant,
-    Cuisine: Cuisine, 
-    Message: Message, 
-    MeetUp: MeetUp }
+    Cuisine: Cuisine,
+    Message: Message,
+    MeetUp: MeetUp
+}

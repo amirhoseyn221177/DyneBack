@@ -7,12 +7,12 @@ var chalk = require('chalk');
 const url = 'mongodb://localhost:27017'
 
 //export this function and imported by server.js
-mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true,autoIndex:false }, () => {
+mongoose.connect(url, {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false}, () => {
     console.log(chalk.red("we are connected"))
 })
 const allSchemas = () => {
     const user = mongoose.Schema({
-        email: { type: String, required: true, unique: true },
+        email: {type: String, required: true, unique: true},
         photoUrl: String,
         displayName: String,
         bio: String,
@@ -20,8 +20,8 @@ const allSchemas = () => {
             Latitude: Number, Longtitude: Number
         },
         lastTime: Date,
-        friends: {type:[String],required:true},
-        phone: { type: String, required: true, unique: true },
+        friends: {type: [String], required: true, default: []},
+        phone: {type: String, required: true, unique: true},
         meetups: String,
         rating: Number,
         points: Number,
@@ -80,18 +80,24 @@ const allSchemas = () => {
     })
     mongoose.model('Cuisine', Cuisine)
     const meetUp = mongoose.Schema({
-        meetUpProgress: ['AwaitingResponse', 'PendingReschedule', 'Accepted', 'Declined', 'Confirmed', 'Cancelled'],
-        hostId: String,
-        hostName: String,
+        hostId: {type: String, required: true},
+        hostName: {type: String, required: true},
         hostPhotoUrl: String,
-        restaurantId: String,
-        timeOfMeet: Date,
-        timeOfCreation: Date,
-        duration: Number,
-        isHost: Boolean,
-        qrInput: String,
-        accept: { type: Map, of: String },
-        isConfirmed: Boolean
+        restaurantId: {type: String, required: true},
+        timeOfMeet: {type: Number, required: true},
+        timeOfCreation: {type: Number, default: Date.now()},
+        duration: {type: Number, required: true},
+        isHost: {type: Boolean, default: true},
+        qrInput: {type: String, defailt: Math.random(100, 1000)},
+        accept: {
+            "Accepted": [String],
+            "AwaitingResponse": [String],
+            "PendingReschedule": [String],
+            "Declined": [String],
+            "Confirmed": [String],
+            "Canceled": [String]
+        },
+        isConfirmed: {type: Boolean, default: false},
     })
     mongoose.model("meetUp", meetUp)
 
@@ -108,19 +114,19 @@ const allSchemas = () => {
 
     const restaurant = mongoose.Schema({
         cuisines: [],
-        name: { type: String, required: true },
+        name: {type: String, required: true},
         imageUrl: String,
         websiteUrl: String,
         phoneNumber: Number,
         address: String,
         city: String,
-        Affordability: { type: String, enum: ["Affordable", "Pricey", "Luxury"] },
+        Affordability: {type: String, enum: ["Affordable", "Pricey", "Luxury"]},
         isGlutenFree: Boolean,
         isVegetarian: Boolean,
         hasPickup: Boolean,
         hasEatIn: Boolean,
         hasPatio: Boolean,
-        hasDelivery: { type: Boolean, default: false },
+        hasDelivery: {type: Boolean, default: false},
         isFavorite: Boolean,
         localPopularity: Number,
         openNow: Boolean,
