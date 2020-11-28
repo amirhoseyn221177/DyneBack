@@ -14,8 +14,8 @@ const allSchemas = () => {
     const user = mongoose.Schema({
         email: {type: String, required: true, unique: true},
         photoUrl: String,
-        displayName: String,
-        bio: String,
+        displayName: {type:String,required:true},
+        bio: {type:String,default:''},
         LastLocation: {
             Latitude: Number, Longtitude: Number
         },

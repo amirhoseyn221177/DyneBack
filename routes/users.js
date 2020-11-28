@@ -58,12 +58,13 @@ router.put('/addfriend/:id', async (req, res) => {
     }
 })
 
-router.post('/delete', async (req, res) => {
+router.delete('/delete', async (req, res) => {
     try {
         await User.deleteMany({}, e => Error(e))
     } catch (e) {
         console.log(e)
     }
 })
+
 
 module.exports = router;
