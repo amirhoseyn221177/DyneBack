@@ -61,8 +61,10 @@ router.get('/getall', async (req, res) => {
 router.put('/changestatus/:id', async (req, res) => {
     try {
         if (req.body.response === 'Accepted') {
-            await MeetUp.updateOne({ _id: req.params.id }, {$and:[{ $addToSet: { "accept.Confirmed": req.body.user }},
-            {$pull:{"accept.AwaitingResponse":req.body.user}}]}, e => Error(e))
+            await MeetUp.updateOne({ _id: req.params.id }, {
+                    $addToSet: { "accept.Confirmed": req.body.user },
+                    $pull:{"accept.AwaitingResponse":req.body.user}
+        }, e => Error(e))
             const query = await MeetUp.findById({_id:req.params.id})
             res.json(query)
         }
