@@ -7,25 +7,27 @@ var chalk = require('chalk');
 const url = 'mongodb://localhost:27017'
 
 //export this function and imported by server.js
-mongoose.connect(url, {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false}, () => {
+mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false }, () => {
     console.log(chalk.red("we are connected"))
 })
 const allSchemas = () => {
     const user = mongoose.Schema({
-        email: {type: String, required: true, unique: true},
+        email: { type: String, required: true, unique: true },
         photoUrl: String,
-        displayName: {type:String,required:true},
-        bio: {type:String,default:''},
+        displayName: { type: String, required: true },
+        bio: { type: String, default: '' },
         LastLocation: {
             Latitude: Number, Longtitude: Number
         },
+        password: { type: String, required: true },
         lastTime: Date,
-        friends: {type: [String], required: true, default: []},
-        phone: {type: String, required: true, unique: true},
+        friends: { type: [String], required: true, default: [] },
+        phone: { type: String, required: true, unique: true },
         meetups: String,
         rating: Number,
         points: Number,
-        referralUid: String
+        referralUid: String,
+        role: { type: String, required: true }
     })
     mongoose.model('User', user)
 
@@ -80,15 +82,15 @@ const allSchemas = () => {
     })
     mongoose.model('Cuisine', Cuisine)
     const meetUp = mongoose.Schema({
-        hostId: {type: String, required: true},
-        hostName: {type: String, required: true},
+        hostId: { type: String, required: true },
+        hostName: { type: String, required: true },
         hostPhotoUrl: String,
-        restaurantId: {type: String, required: true},
-        timeOfMeet: {type: Number, required: true},
-        timeOfCreation: {type: Number, default: Date.now()},
-        duration: {type: Number, required: true},
-        isHost: {type: Boolean, default: true},
-        qrInput: {type: String, defailt: Math.random(100, 1000)},
+        restaurantId: { type: String, required: true },
+        timeOfMeet: { type: Number, required: true },
+        timeOfCreation: { type: Number, default: Date.now() },
+        duration: { type: Number, required: true },
+        isHost: { type: Boolean, default: true },
+        qrInput: { type: String, defailt: Math.random(100, 1000) },
         accept: {
             "Accepted": [String],
             "AwaitingResponse": [String],
@@ -97,7 +99,7 @@ const allSchemas = () => {
             "Confirmed": [String],
             "Canceled": [String]
         },
-        isConfirmed: {type: Boolean, default: false},
+        isConfirmed: { type: Boolean, default: false },
     })
     mongoose.model("meetUp", meetUp)
 
@@ -114,19 +116,19 @@ const allSchemas = () => {
 
     const restaurant = mongoose.Schema({
         cuisines: [],
-        name: {type: String, required: true},
+        name: { type: String, required: true },
         imageUrl: String,
         websiteUrl: String,
         phoneNumber: Number,
         address: String,
         city: String,
-        Affordability: {type: String, enum: ["Affordable", "Pricey", "Luxury"]},
+        Affordability: { type: String, enum: ["Affordable", "Pricey", "Luxury"] },
         isGlutenFree: Boolean,
         isVegetarian: Boolean,
         hasPickup: Boolean,
         hasEatIn: Boolean,
         hasPatio: Boolean,
-        hasDelivery: {type: Boolean, default: false},
+        hasDelivery: { type: Boolean, default: false },
         isFavorite: Boolean,
         localPopularity: Number,
         openNow: Boolean,
