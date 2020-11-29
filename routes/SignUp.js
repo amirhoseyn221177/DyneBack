@@ -3,6 +3,7 @@ const router = express.Router()
 const { User } = require('../MongodDB/models')
 const bcrypt = require('bcrypt')
 const Error = require('../ErrorHandling/Error')
+const jwt = require('jsonwebtoken')
 const salt = 12
 
 
@@ -38,6 +39,28 @@ router.get('/getall',async(req,res)=>{
 
 router.delete('/delete',async(req,res)=>{
     await User.deleteMany({})
+})
+
+router.post('/login/:email',async(req,res)=>{
+    try{
+        const item=await User.find({email:req.params.email},'password',async(e)=>Error(e))
+        let hashedPass= item[0].password
+        let result =bcrypt.compare(req.body.password,hashedPass)
+        if(result){
+            console.log(process.env)
+            let token=jwt.sign({username:req.params.email},process.env.Access_Token_Secret,{
+                algorithm:"HS256",
+                expiresIn:7200
+            })
+            res.cookie(token)
+            res.end()
+        }else{
+            throw new Error("the password is wrong ")
+        }
+    }catch(e){
+        console.log(63)
+        console.error(e.message)
+    }
 })
 
 module.exports=router;
