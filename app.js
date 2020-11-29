@@ -9,8 +9,8 @@ var cookie_parser = require('cookie-parser')
 var bod_parser = require('body-parser')
 var app = express();
 var db = require('./MongodDB/DBSetup');
-const mongoose = require('./MongodDB/DBSetup');
-var meetUp = require('./routes/meetUp')
+var meetUp = require('./routes/meetUp');
+var signUp=require('./routes/SignUp')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -24,7 +24,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 db
 app.use('/user', usersRouter);
-app.use('/meetup', meetUp)
+app.use('/meetup', meetUp);
+app.use('/signup',signUp);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));

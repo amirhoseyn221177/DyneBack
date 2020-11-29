@@ -1,4 +1,4 @@
-const Error=(e)=>{
+const Error=async(e)=>{
     if(e){
         console.log(e)
     }else{
