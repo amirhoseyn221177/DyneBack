@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 const { User } = require('../MongodDB/models')
 const bcrypt = require('bcrypt')
-const Error = require('../ErrorHandling/Error')
+const { Key } = require('../AuthenticationKey/AuthKey')
 const jwt = require('jsonwebtoken')
+const Error = require('../ErrorHandling/Error')
+const { gettingUserByEmail } = require('../MongodDB/AllFunctions')
 const salt = 12
 
 
@@ -17,7 +19,7 @@ router.post('/create', async (req, res) => {
             const hashed = await bcrypt.hash(password, genedsalt)
             await User.create({ email: email, password: hashed, displayName: displayName, phone: phone, role: role }, async (e, user) => {
                 await Error(e)
-                res.status(200).json({ status: 'successful',user:user })
+                res.status(200).json({ status: 'successful', user: user })
             })
         }
     } catch (e) {
@@ -27,40 +29,46 @@ router.post('/create', async (req, res) => {
 
 })
 
-router.get('/getall',async(req,res)=>{
-    try{
-        const all = await User.find({},e=>Error(e))
+router.get('/getall', async (req, res) => {
+    try {
+        const all = await User.find({}, e => Error(e))
         res.json(all)
-    }catch(e){
+    } catch (e) {
         console.error(e)
 
     }
 })
 
-router.delete('/delete',async(req,res)=>{
+router.delete('/delete', async (req, res) => {
     await User.deleteMany({})
 })
 
-router.post('/login/:email',async(req,res)=>{
-    try{
-        const item=await User.find({email:req.params.email},'password',async(e)=>Error(e))
-        let hashedPass= item[0].password
-        let result =bcrypt.compare(req.body.password,hashedPass)
-        if(result){
-            console.log(process.env)
-            let token=jwt.sign({username:req.params.email},process.env.Access_Token_Secret,{
-                algorithm:"HS256",
-                expiresIn:7200
-            })
-            res.cookie(token)
-            res.end()
-        }else{
+router.get('/login/:email', async (req, res) => {
+    try {
+        const user = await gettingUserByEmail(req.params.email)
+        if (user) {
+            let hashedPass = await user.password
+            let result = await bcrypt.compare(req.body.password, hashedPass)
+            if (result) {
+                let token = jwt.sign({ username: req.params.email, role:user.role}, Key, {
+                    algorithm: "HS256",
+                    expiresIn: 7200
+                })
+                res.status(200)
+                .cookie(token)
+                .json({message:"succesful"})
+                .end()
+            }
+
+        } else {
             throw new Error("the password is wrong ")
         }
-    }catch(e){
-        console.log(63)
-        console.error(e.message)
+    } catch (e) {
+        console.error(e)
+        res.status(401).json({message:"there is problem with your password"})
     }
 })
 
-module.exports=router;
+
+
+module.exports = router;
