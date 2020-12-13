@@ -2,16 +2,15 @@ const express = require('express')
 const router = express.Router()
 const { MeetUp } = require('../MongodDB/models')
 const Error = require('../ErrorHandling/Error')
-const { query } = require('express')
 
 router.post('/create', async (req, res) => {
     try {
         const meetup = new MeetUp(req.body)
         await meetup.save(e => Error(e))
-        const all = await MeetUp.find({}, e => Error(e)).exec()
-        console.log(all)
+        res.status(200).json({message:'succesful',meetUp:meetup})
     } catch (e) {
         console.log(e)
+        res.status(401).json({message:"creating this group was unsuccesful"})
     }
 })
 
@@ -28,7 +27,13 @@ router.get('/get/:id', async (req, res) => {
 
 
 router.delete('/delete/:id', async (req, res) => {
-    await MeetUp.deleteOne({ _id: id }, e => Error(e))
+    try{
+        await MeetUp.deleteOne({ _id: req.params.id })
+
+    }catch(e){
+
+        res.status(400).json({message:"unsucceful to delete the meetup",e:e.message})
+    }
 })
 
 
@@ -104,6 +109,23 @@ router.get('/people/:id', async (req, res) => {
         console.log(e)
     }
 })
+
+router.delete('/kickout/:id/:host/:member',async(req,res)=>{
+    try{
+        let {id,host,member} =req.params
+        let updated=await MeetUp.updateOne({_id:id},{$and:[
+            {$pull:{"accept.Confirmed":member}},
+            {"hostId":host}]}) // this still needs works and is not responsive#######################################3
+    
+          
+        res.status(200).json({message:" user deleted",meetUp:update})
+    }catch(e){
+        console.log(e)
+        res.status.json({message:"sorry we are unable to do this action"})
+    }
+})
+
+
 
 
 

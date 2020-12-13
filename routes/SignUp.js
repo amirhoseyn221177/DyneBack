@@ -17,14 +17,12 @@ router.post('/create', async (req, res) => {
         } else {
             const genedsalt = await bcrypt.genSalt(salt)
             const hashed = await bcrypt.hash(password, genedsalt)
-            await User.create({ email: email, password: hashed, displayName: displayName, phone: phone, role: role }, async (e, user) => {
-                await Error(e)
-                res.status(200).json({ status: 'successful', user: user })
-            })
+            await User.create({ email: email, password: hashed, displayName: displayName, phone: phone, role: role })
+            res.json({message:"your account has been created"})
         }
     } catch (e) {
-        console.error(e)
-        res.status(500).json({ status: "we can't create your account right now " })
+        console.error(e.message)
+        res.status(500).json({ status: "we can't create your account" })
     }
 
 })

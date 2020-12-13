@@ -1,12 +1,12 @@
 const express = require('express')
 const route = express.Router()
 const mongoose = require('mongoose')
+const router = require('./SignUp')
+const { Restuarant } = require('../MongodDB/models')
 
 
 route.post('/addrestuarant', async (req, res) => {
     try {
-        let Restuarant = mongoose.model("restaurant")
-
         let restaurant = new Restuarant(req.body)
         await restaurant.save(() => {
             console.log("it is saved")
@@ -29,7 +29,6 @@ route.post('/getall', async (req, res) => {
 
 route.post(`/getrestuarant/:id`, async (req, res) => {
     try {
-        let Restuarant = mongoose.model("restaurant")
 
         let restaurant = await Restuarant.findById(parseInt(req.params.id)).exec((err, res) => {
             if (err) console.log(`there is an error getting this restuarant ${err}`)
@@ -46,8 +45,6 @@ route.post(`/getrestuarant/:id`, async (req, res) => {
 
 route.post(`/deleterestuarant/:id`, async (req, res) => {
     try {
-        let Restuarant = mongoose.model("restaurant")
-
         await Restuarant.deleteOne({id: parseInt(req.params.id)}, (err) => {
             if (err) console.log(err)
             else {
@@ -57,4 +54,14 @@ route.post(`/deleterestuarant/:id`, async (req, res) => {
     } catch (e) {
         console.log(e)
     }
+})
+
+
+router.get('/getMenu/:id',async(req,res)=>{
+    try{
+    }catch(e){
+        console.log(e)
+        res.status(401).json({message:"sorry there is an error finding this restaurant"})
+    }
+
 })

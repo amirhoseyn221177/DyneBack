@@ -90,7 +90,7 @@ const allSchemas = () => {
         timeOfCreation: { type: Number, default: Date.now() },
         duration: { type: Number, required: true },
         isHost: { type: Boolean, default: true },
-        qrInput: { type: String, defailt: Math.random(100, 1000) },
+        qrInput: { type: String, default: Math.random(100, 1000) },
         accept: {
             "Accepted": [String],
             "AwaitingResponse": [String],
@@ -100,6 +100,7 @@ const allSchemas = () => {
             "Canceled": [String]
         },
         isConfirmed: { type: Boolean, default: false },
+        Users: { type: [String], default: [], required: true }
     })
     mongoose.model("meetUp", meetUp)
 
@@ -132,6 +133,7 @@ const allSchemas = () => {
         isFavorite: Boolean,
         localPopularity: Number,
         openNow: Boolean,
+        menu: String
 
     })
     mongoose.model("restaurant", restaurant)
