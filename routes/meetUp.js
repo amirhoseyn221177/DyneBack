@@ -7,10 +7,10 @@ router.post('/create', async (req, res) => {
     try {
         const meetup = new MeetUp(req.body)
         await meetup.save(e => Error(e))
-        res.status(200).json({message:'succesful',meetUp:meetup})
+        res.status(200).json({ message: 'succesful', meetUp: meetup })
     } catch (e) {
         console.log(e)
-        res.status(401).json({message:"creating this group was unsuccesful"})
+        res.status(401).json({ message: "creating this group was unsuccesful" })
     }
 })
 
@@ -27,12 +27,12 @@ router.get('/get/:id', async (req, res) => {
 
 
 router.delete('/delete/:id', async (req, res) => {
-    try{
+    try {
         await MeetUp.deleteOne({ _id: req.params.id })
 
-    }catch(e){
+    } catch (e) {
 
-        res.status(400).json({message:"unsucceful to delete the meetup",e:e.message})
+        res.status(400).json({ message: "unsucceful to delete the meetup", e: e.message })
     }
 })
 
@@ -46,7 +46,8 @@ router.get('/getbyuser/:id', async (req, res) => {
                     Confirmed: { $in: [req.params.id] }
                 }
             }, { 'accept.Confirmed': { $in: [req.params.id] } }]
-        }, e => Error(e))
+        })
+        res.json({ message: "all the meeting for this user", meetings: user })
     } catch (e) {
         console.log(e)
     }
@@ -55,9 +56,7 @@ router.get('/getbyuser/:id', async (req, res) => {
 
 router.get('/getall', async (req, res) => {
     const all = await MeetUp.find({}).exec()
-    all.map(x => {
-        console.log(x)
-    })
+    res.json({ data: all })
 })
 
 
@@ -110,18 +109,17 @@ router.get('/people/:id', async (req, res) => {
     }
 })
 
-router.delete('/kickout/:id/:host/:member',async(req,res)=>{
-    try{
-        let {id,host,member} =req.params
-        let updated=await MeetUp.updateOne({_id:id},{$and:[
-            {$pull:{"accept.Confirmed":member}},
-            {"hostId":host}]}) // this still needs works and is not responsive#######################################3
-    
-          
-        res.status(200).json({message:" user deleted",meetUp:update})
-    }catch(e){
+router.put('/kickout/:id/:host/:member', async (req, res) => {
+    try {
+        let { id, host, member } = req.params
+        if(host!==member){
+            await MeetUp.updateOne({ _id: id, hostId: host }, {$pull: { "accept.Confirmed": member } })
+            res.status(200).json({ message: " user deleted" })
+        }
+     
+    } catch (e) {
         console.log(e)
-        res.status.json({message:"sorry we are unable to do this action"})
+        res.status.json({ message: "sorry we are unable to do this action" })
     }
 })
 
