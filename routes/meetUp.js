@@ -112,15 +112,36 @@ router.get('/people/:id', async (req, res) => {
 router.put('/kickout/:id/:host/:member', async (req, res) => {
     try {
         let { id, host, member } = req.params
-        if(host!==member){
-            await MeetUp.updateOne({ _id: id, hostId: host }, {$pull: { "accept.Confirmed": member } })
-            res.status(200).json({ message: " user deleted" })
+        if (host !== member) {
+            let newMeetUp = await MeetUp.findOneAndUpdate({ _id: id, hostId: host }, { 
+                $pull: { "accept.AwaitingResponse": member },
+                $inc:{"users":-1}
+             }, { new: true })
+            res.status(200).json({ message: " user deleted", message: newMeetUp })
         }
-     
+
     } catch (e) {
         console.log(e)
         res.status.json({ message: "sorry we are unable to do this action" })
     }
+})
+
+router.put('/add/:id/:host/:member', async (req, res) => {
+    try {
+        let { id, host, member } = req.params
+        if (host !== member) {
+            let newMeetUp = await MeetUp.findOneAndUpdate({ _id: id, hostId: host},{
+                $addToSet:{"accept.AwaitingResponse":member},
+                $inc:{"users":1}
+            },{new:true})
+            res.status(200).json({ data: newMeetUp })
+
+        }
+    } catch (e) {
+        console.log(e)
+    }
+
+
 })
 
 

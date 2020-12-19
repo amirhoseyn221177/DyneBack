@@ -7,7 +7,7 @@ var chalk = require('chalk');
 const url = 'mongodb://localhost:27017'
 
 //export this function and imported by server.js
-mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false }, () => {
+mongoose.connect(url, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false ,useFindAndModify:false}, () => {
     console.log(chalk.red("we are connected"))
 })
 const allSchemas = () => {
@@ -100,7 +100,8 @@ const allSchemas = () => {
             "Canceled": [String]
         },
         isConfirmed: { type: Boolean, default: false },
-        Users: { type: [String], default: [], required: true }
+        users:{type:Number,required:true}
+
     })
     mongoose.model("meetUp", meetUp)
 
