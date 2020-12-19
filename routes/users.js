@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const { User } = require('../MongodDB/models')
 const Error = require('../ErrorHandling/Error');
+const jwt = require('jsonwebtoken')
+var {Key}=require('../AuthenticationKey/AuthKey');
 
 /* GET users listing. */
 router.delete(`/deleteuser/:id`, async (req, res) => {
@@ -54,13 +56,42 @@ router.delete('/delete', async (req, res) => {
 })
 
 
-router.get('/getfriends/:id',async(req,res)=>{
-    try{
-        const query = await User.findById({_id:req.params.id},{friends},e=>Error(e)) 
+router.get('/getfriends/:id', async (req, res) => {
+    try {
+        const query = await User.findById({ _id: req.params.id }, { friends }, e => Error(e))
         res.json(query)
-    }catch(e){
+    } catch (e) {
         console.error(e)
     }
 })
+
+router.put('/unfriend/:user/friend', async (req, res) => {
+    try {
+        const newFriends = await User.findOneAndUpdate({ _id: req.params.id }, 'friends', { $pull: { "friends": req.params.friend } })
+        res.status(200).json({ friends: newFriends })
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+
+router.put('/updatephoto/:id', async (req, res) => {
+    try {
+        // i have to exchange it with aws and send back the new url
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+router.get('/test',async(req,res)=>{
+    let token= req.headers['authorization']
+    let usertoken=token.split(' ')[1]
+    let answer=jwt.verify(usertoken,Key)
+    console.log(answer)
+
+})
+
+
+
 
 module.exports = router;

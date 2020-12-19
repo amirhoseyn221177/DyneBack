@@ -48,6 +48,7 @@ router.get('/login/:email', async (req, res) => {
             let hashedPass = await user.password
             let result = await bcrypt.compare(req.body.password, hashedPass)
             if (result) {
+                console.log(51)
                 let token = jwt.sign({ username: req.params.email, role:user.role}, Key, {
                     algorithm: "HS256",
                     expiresIn: 7200

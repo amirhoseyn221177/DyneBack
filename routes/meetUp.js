@@ -23,6 +23,7 @@ router.delete('/deleteall', async (req, res) => {
 
 router.get('/get/:id', async (req, res) => {
     const meetUp = await MeetUp.findById({ _id: req.params.id }, e => Error(e))
+    res.json({meetup:meetUp})
 })
 
 
@@ -135,14 +136,12 @@ router.put('/add/:id/:host/:member', async (req, res) => {
                 $inc:{"users":1}
             },{new:true})
             res.status(200).json({ data: newMeetUp })
-
         }
     } catch (e) {
         console.log(e)
     }
-
-
 })
+
 
 
 
